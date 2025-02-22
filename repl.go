@@ -10,30 +10,20 @@ import (
 )
 
 // Initialize the config registry
-type Config struct {
-	pokeClient    *pokeapi.Client
-	nextUrl       string
-	previousUrl   string
-	isAtFirstPage bool
-	isAtLastPage  bool
+type config struct {
+	pokeClient  pokeapi.Client
+	nextUrl     *string
+	previousUrl *string
 }
 
 // Initialize the command registry
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(*config) error
 }
 
-func startRepl() {
-	// create config struct
-	cfg := &Config{
-		pokeClient:    pokeapi.NewClient(),
-		nextUrl:       "",
-		previousUrl:   "",
-		isAtFirstPage: true,
-		isAtLastPage:  false,
-	}
+func startRepl(cfg *config) {
 
 	// start a scanner to wait for user inputs
 	scanner := bufio.NewScanner(os.Stdin)

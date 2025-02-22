@@ -1,14 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 )
 
-func commandMap(cfg *Config) error {
-	// Check if it's the last page
-	if cfg.isAtLastPage {
-		fmt.Println("You've reached the last page! Use 'mapb' to go back")
-		return nil
+func commandMap(cfg *config) error {
+	// Check if it's the last page (and not just at the beginning)
+	if cfg.nextUrl == nil && cfg.previousUrl != nil {
+		return errors.New("you're already on the last page")
 	}
 
 	// Get the results
@@ -17,23 +17,35 @@ func commandMap(cfg *Config) error {
 		return err
 	}
 
-	// Update next url and is at last page
-	if result.Next == nil {
-		cfg.isAtLastPage = true
-		cfg.nextUrl = ""
-	} else {
-		cfg.isAtLastPage = false
-		cfg.nextUrl = *result.Next
+	// Update next/previous url
+	cfg.nextUrl = result.Next
+	cfg.previousUrl = result.Previous
+
+	// Print the results
+	fmt.Println()
+	for _, loc := range result.Results {
+		fmt.Println(loc.Name)
+	}
+	fmt.Println()
+
+	return nil
+}
+
+func commandMapb(cfg *config) error {
+	// Check if it's the first page
+	if cfg.previousUrl == nil {
+		return errors.New("you're already on the first page")
 	}
 
-	// Update previous url and is at first page
-	if result.Previous == nil {
-		cfg.isAtFirstPage = true
-		cfg.previousUrl = ""
-	} else {
-		cfg.isAtFirstPage = false
-		cfg.previousUrl = *result.Previous
+	// Get the results
+	result, err := cfg.pokeClient.GetLocationAreas(cfg.previousUrl)
+	if err != nil {
+		return err
 	}
+
+	// Update next/previous url
+	cfg.nextUrl = result.Next
+	cfg.previousUrl = result.Previous
 
 	// Print the results
 	fmt.Println()
