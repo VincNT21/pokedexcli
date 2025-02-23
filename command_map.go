@@ -12,7 +12,7 @@ func commandMap(cfg *config) error {
 	}
 
 	// Get the results
-	result, err := cfg.pokeClient.GetLocationAreas(cfg.nextUrl)
+	result, err := cfg.pokeClient.GetLocationAreas(cfg.nextUrl, cfg.pokeCache)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func commandMapb(cfg *config) error {
 	}
 
 	// Get the results
-	result, err := cfg.pokeClient.GetLocationAreas(cfg.previousUrl)
+	result, err := cfg.pokeClient.GetLocationAreas(cfg.previousUrl, cfg.pokeCache)
 	if err != nil {
 		return err
 	}

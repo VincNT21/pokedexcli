@@ -7,11 +7,13 @@ import (
 	"strings"
 
 	"github.com/VincNT21/pokedexcli/internal/pokeapi"
+	"github.com/VincNT21/pokedexcli/internal/pokecache"
 )
 
 // Initialize the config registry
 type config struct {
 	pokeClient  pokeapi.Client
+	pokeCache   *pokecache.Cache
 	nextUrl     *string
 	previousUrl *string
 }
