@@ -4,16 +4,15 @@ import (
 	"time"
 
 	"github.com/VincNT21/pokedexcli/internal/pokeapi"
-	"github.com/VincNT21/pokedexcli/internal/pokecache"
 )
 
 func main() {
-	interval := 5 * time.Second
-	pokeClient := pokeapi.NewClient()
-	pokeCache := pokecache.NewCache(interval)
+	timeout := 5 * time.Second
+	interval := 5 * time.Minute
+	pokeClient := pokeapi.NewClient(timeout, interval)
 	cfg := &config{
 		pokeClient: pokeClient,
-		pokeCache:  pokeCache,
 	}
+
 	startRepl(cfg)
 }

@@ -2,13 +2,12 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/VincNT21/pokedexcli/internal/pokecache"
 )
 
-func (c *Client) GetLocationAreas(pageURL *string, pkCache *pokecache.Cache) (RespShallowLocation, error) {
+func (c *Client) GetLocationAreas(pageURL *string) (RespShallowLocation, error) {
 	// If no URL provided, use the default endpoint to location-area
 	url := BaseURL + "/location-area"
 	if pageURL != nil {
@@ -16,14 +15,15 @@ func (c *Client) GetLocationAreas(pageURL *string, pkCache *pokecache.Cache) (Re
 	}
 
 	// Check if cached data for this url first
-	entry, ok := pkCache.Get(url)
 	var data []byte
+	entry, ok := c.cache.Get(url)
 	if ok {
 		// If yes, store them for use
+		fmt.Println("*Cache data used!*")
 		data = entry
 	} else {
 		// If not,
-		// make GET request
+		// make GET request and handle result
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			return RespShallowLocation{}, err
@@ -40,8 +40,9 @@ func (c *Client) GetLocationAreas(pageURL *string, pkCache *pokecache.Cache) (Re
 			return RespShallowLocation{}, nil
 		}
 		data = readData
+
 		// Add the data to cache
-		pkCache.Add(url, data)
+		c.cache.Add(url, data)
 	}
 
 	// Decode data to result
