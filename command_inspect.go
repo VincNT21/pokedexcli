@@ -30,6 +30,14 @@ func commandInspect(cfg *config, args ...string) error {
 	fmt.Printf("Weight: %v\n", pokemonDetails.Weight)
 	fmt.Printf("Custom difficulty to catch: %v\n", cfg.pokeClient.GetPokemonDifficulty(pokemonDetails))
 	fmt.Printf("Stats: \n")
-	// NEED TO MANAGE STAT STRUCT IN A STRUCT...
-	fmt.Printf("  -hp: %v\n", pokemonDetails.Stats[])
+	for _, stat := range pokemonDetails.Stats {
+		fmt.Printf("  -%v: %v\n", stat.Stat.Name, stat.BaseStat)
+	}
+	fmt.Printf("Types: \n")
+	for _, typeinfo := range pokemonDetails.Types {
+		fmt.Printf("  -%v\n", typeinfo.Type.Name)
+	}
+	fmt.Println()
+
+	return nil
 }

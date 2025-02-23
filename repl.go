@@ -24,7 +24,7 @@ type cliCommand struct {
 }
 
 // Get a sort command list
-var commandNames = []string{"help", "map", "mapb", "explore", "catch", "difficulty", "show", "exit"}
+var commandNames = []string{"help", "map", "mapb", "explore", "catch", "difficulty", "pokedex", "inspect", "exit"}
 
 func startRepl(cfg *config) {
 
@@ -117,10 +117,15 @@ func getCommands() map[string]cliCommand {
 			description: "Show difficulty to catch a pokemon",
 			callback:    commandDifficulty,
 		},
-		"show": {
-			name:        "show",
-			description: "Display Pokemon in the pokedex",
-			callback:    commandShow,
+		"pokedex": {
+			name:        "pokedex",
+			description: "See all the pokemon you've caught",
+			callback:    commandPokedex,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "View details about a caught pokemon",
+			callback:    commandInspect,
 		},
 		"exit": {
 			name:        "exit",

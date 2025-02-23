@@ -27,6 +27,14 @@ func commandCatch(cfg *config, args ...string) error {
 	time.Sleep(1 * time.Second)
 	result := cfg.pokeClient.TryToCatchPokemon(pokemonDetails)
 
+	/*
+		An other way to deal with randomness/difficulty to catch:
+		res := rand.Intn(pokemon.BaseExperience)
+
+		if res > 40 ==> Fail
+
+	*/
+
 	// Handle failed/successful catch
 	if !result {
 		fmt.Printf("Failed... %v escaped!\n", pokemonName)
@@ -36,11 +44,11 @@ func commandCatch(cfg *config, args ...string) error {
 		already := cfg.pokedex.Add(pokemonDetails)
 		if !already {
 			fmt.Printf("Success! %v was caught and added to Pokedex!\n", pokemonName)
-			fmt.Println()
+			fmt.Println("You may now inspect it with the inspect command.")
 		} else {
 			fmt.Printf("Success ! But '%v' already in pokedex\n", pokemonDetails.Name)
-			fmt.Println()
 		}
+		fmt.Println()
 
 		return nil
 	}

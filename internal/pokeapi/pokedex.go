@@ -39,5 +39,10 @@ func (p *Pokedex) Add(pokemon PokemonDetails) bool {
 
 // To get the details of a pokemon from the pokedex
 func (p *Pokedex) Get(pokemon string) PokemonDetails {
+	// Manage Mutex lock
+	p.mu.RLock()
+	defer p.mu.RUnlock()
 
+	// Return pokemon details
+	return p.catchedMap[pokemon]
 }

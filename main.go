@@ -15,6 +15,5 @@ func main() {
 		pokeClient: pokeClient,
 		pokedex:    pokedex,
 	}
-
 	startRepl(cfg)
 }

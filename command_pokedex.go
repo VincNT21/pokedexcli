@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func commandShow(cfg *config, args ...string) error {
+func commandPokedex(cfg *config, args ...string) error {
 	// Get the pokedex list
 	catchedList := cfg.pokedex.NameList
 
