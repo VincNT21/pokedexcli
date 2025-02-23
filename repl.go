@@ -1,12 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/VincNT21/pokedexcli/internal/pokeapi"
+	"github.com/chzyer/readline"
 )
 
 // Initialize the config registry
@@ -14,14 +13,18 @@ type config struct {
 	pokeClient  pokeapi.Client
 	nextUrl     *string
 	previousUrl *string
+	pokedex     pokeapi.Pokedex
 }
 
-// Initialize the command registry
+// Command registry
 type cliCommand struct {
 	name        string
 	description string
 	callback    func(*config, ...string) error
 }
+
+// Get a sort command list
+var commandNames = []string{"help", "map", "mapb", "explore", "catch", "difficulty", "show", "exit"}
 
 func startRepl(cfg *config) {
 
@@ -31,17 +34,24 @@ func startRepl(cfg *config) {
 	command.callback(cfg)
 	fmt.Println()
 
-	// start a scanner to wait for user inputs
-	scanner := bufio.NewScanner(os.Stdin)
+	// Create new readline instance
+	rl, err := readline.New("Pokedex > ")
+	if err != nil {
+		fmt.Println("Error initializing readline:", err)
+		return
+	}
+	defer rl.Close()
 
 	// forever loop
 	for {
-		fmt.Print("Pokedex > ")
-		// when user press enter
-		scanner.Scan()
+		// Use readline to check for input
+		line, err := rl.Readline()
+		if err != nil { // ctrl-c, ctrl-d, etc.
+			break
+		}
 
 		// Get only the first word (= command)
-		words := cleanInput(scanner.Text())
+		words := cleanInput(line)
 		if len(words) == 0 {
 			continue
 		}
@@ -96,6 +106,21 @@ func getCommands() map[string]cliCommand {
 			name:        "explore <location_name>",
 			description: "Explore a location",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon_name>",
+			description: "Try to catch a pokemon",
+			callback:    commandCatch,
+		},
+		"difficulty": {
+			name:        "difficulty <pokemon_name>",
+			description: "Show difficulty to catch a pokemon",
+			callback:    commandDifficulty,
+		},
+		"show": {
+			name:        "show",
+			description: "Display Pokemon in the pokedex",
+			callback:    commandShow,
 		},
 		"exit": {
 			name:        "exit",

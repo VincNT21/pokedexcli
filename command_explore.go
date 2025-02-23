@@ -1,14 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
 func commandExplore(cfg *config, args ...string) error {
 	// Handle no location given
 	if len(args) != 1 {
-		return errors.New("you must provide a location name")
+		return fmt.Errorf("you must provide a location name")
 	}
 
 	location := args[0]
